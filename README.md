@@ -39,8 +39,3 @@
 - CSS3
 - Bootstrap 5
 - Jinja2
-
-## Посилання на GitHub
-
-[Переглянути лабораторну роботу №2 — гілка lab2](https://github.com/AftanasSerhiiCNU/flask-app-lab/tree/lab2)
-
