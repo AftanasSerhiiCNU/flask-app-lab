@@ -1,0 +1,70 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="text-center mb-4">Контакти</h1>
+
+<section class="mb-4">
+    <h2>Контактна інформація</h2>
+
+    <p>
+        <strong>Email:</strong> serhii.aftanas.25@cnu.edu.ua
+    </p>
+
+    <p>
+        <strong>GitHub:</strong>
+        <a href="https://github.com/AftanasSerhiiCNU"
+           target="_blank" rel="noopener noreferrer">
+            Мій GitHub
+        </a>
+    </p>
+</section>
+
+<section class="mb-4">
+    <h2>Написати повідомлення</h2>
+
+    <form action="#" method="post"
+          onsubmit="event.preventDefault();">
+
+        <div class="mb-3">
+            <label for="name" class="form-label">
+                Ім'я
+            </label>
+            <input type="text"
+                   class="form-control"
+                   id="name"
+                   name="name"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">
+                Email
+            </label>
+            <input type="email"
+                   class="form-control"
+                   id="email"
+                   name="email"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label for="message" class="form-label">
+                Повідомлення
+            </label>
+            <textarea class="form-control"
+                      id="message"
+                      name="message"
+                      rows="5"
+                      required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Надіслати
+        </button>
+
+    </form>
+</section>
+
+{% endblock %}

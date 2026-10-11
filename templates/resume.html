@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="text-center mb-4">Моє резюме</h1>
+
+<div class="text-center mb-4">
+    <img src="{{ url_for('static', filename='images/profile.jpg') }}"
+         alt="Фото профілю"
+         class="profile-img">
+</div>
+
+<section class="mb-4">
+    <h2>Про себе</h2>
+    <p>
+        Я студент спеціальності "Інженерія програмного забезпечення".
+        Цікавлюся програмуванням, веброзробкою та сучасними
+        інформаційними технологіями.
+    </p>
+</section>
+
+<section class="mb-4">
+    <h2>Освіта</h2>
+    <p>
+        Навчаюся в КНУ імені Стифаника.
+    </p>
+</section>
+
+<section class="mb-4">
+    <h2>Навички</h2>
+    <ul>
+        <li>Об'єктно-орієнтоване програмування</li>
+        <li>Розробка вебзастосунків</li>
+        <li>Робота з базами даних</li>
+        <li>Використання Git та GitHub</li>
+    </ul>
+</section>
+
+<section class="mb-4">
+    <h2>Технології</h2>
+    <ul>
+        <li>Python, Java, PHP, JavaScript, C++</li>
+        <li>HTML, CSS, Bootstrap</li>
+        <li>Flask</li>
+        <li>MySQL, PostgreSQL</li>
+        <li>Git, GitHub, VS Code</li>
+    </ul>
+</section>
+
+<section class="mb-4">
+    <h2>Проєкти</h2>
+    <p>
+        Навчальний вебзастосунок на Python Flask.
+    </p>
+    <p>
+        Програма для обробки та сортування даних
+        волонтерських організацій на Java.
+    </p>
+</section>
+
+{% endblock %}

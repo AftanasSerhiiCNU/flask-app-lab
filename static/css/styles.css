@@ -1,0 +1,76 @@
+
+/* Загальні стилі */
+body {
+    background-color: #f5f7fa;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Основний вміст */
+main {
+    min-height: 75vh;
+}
+
+/* Заголовки */
+h1 {
+    color: #243b55;
+    font-weight: bold;
+}
+
+h2 {
+    color: #345b80;
+    margin-bottom: 15px;
+}
+
+/* Секції */
+section {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Фотографія профілю */
+.profile-img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #345b80;
+}
+
+/* Навігаційне меню */
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Кнопка відправлення */
+.btn-primary {
+    background-color: #345b80;
+    border-color: #345b80;
+}
+
+.btn-primary:hover {
+    background-color: #243b55;
+    border-color: #243b55;
+}
+
+/* Адаптація для мобільних пристроїв */
+@media (max-width: 768px) {
+    section {
+        padding: 15px;
+    }
+
+    .profile-img {
+        width: 140px;
+        height: 140px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}
