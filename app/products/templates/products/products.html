@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="text-center mb-4">Список товарів</h1>
+
+<div class="row">
+    {% for product in products %}
+
+    <div class="col-md-4 mb-4">
+        <section class="h-100">
+            <h2>{{ product.name }}</h2>
+
+            <p>{{ product.description }}</p>
+
+            <p>
+                <strong>Ціна:</strong>
+                {{ product.price }} грн
+            </p>
+
+            <a href="{{ url_for('products.product_detail', product_id=product.id) }}"
+               class="btn btn-primary">
+                Детальніше
+            </a>
+        </section>
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}
