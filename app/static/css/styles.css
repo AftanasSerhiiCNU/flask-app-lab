@@ -74,3 +74,32 @@ section {
         font-size: 22px;
     }
 }
+
+/* Сторінка привітання користувача */
+.user-menu {
+    max-width: 300px;
+    margin-bottom: 25px;
+}
+
+.user-menu .list-group-item {
+    border-left: 4px solid #345b80;
+}
+
+.user-menu a {
+    color: #345b80;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.user-menu a:hover {
+    color: #243b55;
+    text-decoration: underline;
+}
+
+.user-info {
+    background-color: #f5f7fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+

@@ -1,0 +1,45 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="mb-4">
+    <h1 class="text-center mb-4">Сторінка привітання</h1>
+
+    <nav class="user-menu">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="{{ url_for('users.greetings', name='John', age=30) }}">
+                    Привітати John
+                </a>
+            </li>
+
+            <li class="list-group-item">
+                <a href="{{ url_for('users.admin') }}">
+                    Admin
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="user-info">
+        <h2>Привіт!</h2>
+
+        <p>
+            <strong>Користувач:</strong> {{ name }}
+        </p>
+
+        {% if age is not none %}
+            <p class="text-success">
+                <strong>Вік:</strong> {{ age }}
+            </p>
+        {% else %}
+            <p class="text-danger">
+                <strong>Вік не вказано</strong>
+            </p>
+        {% endif %}
+    </div>
+
+</section>
+
+{% endblock %}
