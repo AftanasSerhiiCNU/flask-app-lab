@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+    <section class="text-center mb-4">
+        <h1>Вітаю на моєму сайті!</h1>
+
+        <p>
+            Це головна сторінка вебзастосунку,
+            розробленого на Python Flask.
+        </p>
+
+        <p>
+            Перейдіть до розділів «Резюме» або
+            «Контакти», щоб дізнатися більше.
+        </p>
+
+        <a href="{{ url_for('resume') }}"
+           class="btn btn-primary">
+            Переглянути резюме
+        </a>
+    </section>
+
+    {% if agent %}
+        <section>
+            <h2>Інформація про браузер</h2>
+            <p>{{ agent }}</p>
+        </section>
+    {% endif %}
+
+{% endblock %}
