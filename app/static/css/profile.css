@@ -1,0 +1,76 @@
+body:has(.profile-page.theme-dark) {
+    background-color: #121820 !important;
+    color: #e5e7eb;
+}
+
+body:has(.profile-page.theme-light) {
+    background-color: #f3f6fa;
+}
+
+body:has(.profile-page) main {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.profile-page {
+    border-radius: 12px;
+    padding: 32px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.profile-page.theme-light {
+    background-color: #ffffff;
+    color: #24364b;
+    border: 1px solid #e2e8f0;
+}
+
+.profile-page.theme-dark {
+    background-color: #1e293b;
+    color: #e5e7eb;
+    border: 1px solid #334155;
+}
+
+.profile-page.theme-dark h1,
+.profile-page.theme-dark h2,
+.profile-page.theme-dark h3 {
+    color: #f8fafc !important;
+}
+
+.profile-page.theme-dark p,
+.profile-page.theme-dark label,
+.profile-page.theme-dark strong {
+    color: #e5e7eb !important;
+}
+
+.profile-page.theme-dark hr {
+    border-color: #64748b;
+    opacity: 0.5;
+}
+
+.profile-page.theme-dark .form-control {
+    background-color: #0f172a;
+    border-color: #475569;
+    color: #f8fafc;
+}
+
+.profile-page.theme-dark .form-control:focus {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.2);
+}
+
+.profile-page.theme-dark .table {
+    --bs-table-bg: #1e293b;
+    --bs-table-striped-bg: #273449;
+    --bs-table-color: #f8fafc;
+    --bs-table-striped-color: #f8fafc;
+    --bs-table-border-color: #475569;
+}
+
+.profile-page .theme-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}

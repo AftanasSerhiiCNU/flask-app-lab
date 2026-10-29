@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="mx-auto" style="max-width: 480px;">
+    <h1 class="mb-4">Вхід у систему</h1>
+
+    <form method="POST" action="{{ url_for('users.login') }}">
+        <div class="mb-3">
+            <label for="username" class="form-label">
+                Ім'я користувача
+            </label>
+            <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                required
+            >
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">
+                Пароль
+            </label>
+            <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+            >
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Увійти
+        </button>
+    </form>
+</section>
+{% endblock %}

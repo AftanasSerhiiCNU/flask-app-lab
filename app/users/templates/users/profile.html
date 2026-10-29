@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-page theme-{{ theme }} mt-4">
+
+    <h1>Профіль користувача</h1>
+
+    <p>Вітаємо, <strong>{{ username }}</strong>!</p>
+    <p>Ви успішно увійшли в систему.</p>
+
+    <form method="POST" action="{{ url_for('users.logout') }}">
+        <button type="submit" class="btn btn-danger">
+            Вийти
+        </button>
+    </form>
+
+    <hr class="my-4">
+
+    <h2>Кольорова схема</h2>
+
+    <p>
+        Поточна тема:
+        <strong>
+            {% if theme == 'dark' %}
+                Темна
+            {% else %}
+                Світла
+            {% endif %}
+        </strong>
+    </p>
+
+    <div class="theme-actions">
+
+        <form method="POST"
+              action="{{ url_for('users.change_theme', theme='light') }}">
+            <button type="submit"
+                    class="btn {% if theme == 'light' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                Світла тема
+            </button>
+        </form>
+
+        <form method="POST"
+              action="{{ url_for('users.change_theme', theme='dark') }}">
+            <button type="submit"
+                    class="btn {% if theme == 'dark' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                Темна тема
+            </button>
+        </form>
+
+    </div>
+
+    <hr class="my-4">
+
+    <h2>Додавання Cookie</h2>
+
+    <form method="POST"
+          action="{{ url_for('users.add_cookie') }}">
+
+        <div class="mb-3">
+            <label for="key" class="form-label">Ключ</label>
+            <input type="text"
+                   class="form-control"
+                   id="key"
+                   name="key"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label for="value" class="form-label">Значення</label>
+            <input type="text"
+                   class="form-control"
+                   id="value"
+                   name="value"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label for="duration" class="form-label">
+                Термін дії (хвилини)
+            </label>
+            <input type="number"
+                   class="form-control"
+                   id="duration"
+                   name="duration"
+                   min="1"
+                   max="525600"
+                   value="60"
+                   required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Додати Cookie
+        </button>
+    </form>
+
+    <hr class="my-4">
+
+    <h2>Поточні Cookie</h2>
+
+    {% if cookies %}
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Ключ</th>
+                        <th>Значення</th>
+                        <th>Дія</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for key, value in cookies.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                        <td>
+                            <form method="POST"
+                                  action="{{ url_for('users.delete_cookie') }}">
+                                <input type="hidden"
+                                       name="key"
+                                       value="{{ key }}">
+                                <button type="submit"
+                                        class="btn btn-warning btn-sm">
+                                    Видалити
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            Наразі немає збережених користувацьких Cookie.
+        </div>
+
+    {% endif %}
+
+    <hr class="my-4">
+
+    <h2>Видалення Cookie</h2>
+
+    <form method="POST"
+          action="{{ url_for('users.delete_cookie') }}"
+          class="mb-3">
+
+        <div class="mb-3">
+            <label for="delete_key" class="form-label">
+                Ключ Cookie для видалення
+            </label>
+            <input type="text"
+                   class="form-control"
+                   id="delete_key"
+                   name="key"
+                   required>
+        </div>
+
+        <button type="submit" class="btn btn-warning">
+            Видалити за ключем
+        </button>
+    </form>
+
+    <form method="POST"
+          action="{{ url_for('users.delete_all_cookies') }}"
+          onsubmit="return confirm('Видалити всі користувацькі Cookie?');">
+
+        <button type="submit" class="btn btn-danger">
+            Видалити всі Cookie
+        </button>
+    </form>
+
+</section>
+
+{% endblock %}
