@@ -1,31 +1,99 @@
-
 {% extends "base.html" %}
 
 {% block content %}
 
-<section class="mb-4">
+<section class="container mt-4">
 
     <h1 class="mb-4">{{ product.name }}</h1>
 
-    <p>
-        <strong>ID товару:</strong>
-        {{ product.id }}
-    </p>
+    <div class="row">
 
-    <p>
-        <strong>Опис:</strong>
-        {{ product.description }}
-    </p>
+        <div class="col-md-5 mb-4">
 
-    <p>
-        <strong>Ціна:</strong>
-        {{ product.price }} грн
-    </p>
+            {% if product.image %}
+                <img
+                    src="{{ url_for('products.static', filename=product.image) }}"
+                    class="img-fluid rounded"
+                    alt="{{ product.name }}">
+            {% else %}
+                <div class="bg-light text-secondary p-5 text-center rounded">
+                    Зображення відсутнє
+                </div>
+            {% endif %}
 
-    <a href="{{ url_for('products.product_list') }}"
-       class="btn btn-secondary">
-        Назад до списку
-    </a>
+        </div>
+
+        <div class="col-md-7">
+
+            <p>
+                <strong>ID:</strong>
+                {{ product.id }}
+            </p>
+
+            <p>
+                <strong>Назва:</strong>
+                {{ product.name }}
+            </p>
+
+            <p>
+                <strong>Опис:</strong>
+            </p>
+
+            <p style="white-space: pre-line;">
+                {{ product.content }}
+            </p>
+
+            <p>
+                <strong>Категорія:</strong>
+                {{ categories.get(product.category, product.category) }}
+            </p>
+
+            <p>
+                <strong>Ціна:</strong>
+                {{ "%.2f"|format(product.price|float) }} грн
+            </p>
+
+            <p>
+                <strong>Кількість:</strong>
+                {{ product.quantity }}
+            </p>
+
+            <p>
+                <strong>Дата додавання:</strong>
+                {{ product.created_at[:19].replace('T', ' ') }}
+            </p>
+
+            <div class="d-flex gap-2 flex-wrap mt-4">
+
+                <a href="{{ url_for('products.product_list') }}"
+                   class="btn btn-secondary">
+                    Назад до списку
+                </a>
+
+                <a href="{{ url_for('products.edit_product', product_id=product.id) }}"
+                   class="btn btn-primary">
+                    Редагувати
+                </a>
+
+                
+                <form method="POST"
+                      action="{{ url_for('products.remove_product', product_id=product.id) }}"
+                      onsubmit="return confirm('Ви впевнені, що хочете видалити цей товар?');">
+                            
+                    {{ delete_form.hidden_tag() }}
+                            
+                    <button type="submit" class="btn btn-danger">
+                        Видалити
+                    </button>
+                
+                </form>
+
+
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
 

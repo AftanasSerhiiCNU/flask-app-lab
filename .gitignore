@@ -1,3 +1,7 @@
 venv/
 __pycache__/
+*.pyc
+.env
 logs/
+data/products.json
+app/products/static/uploads/
