@@ -1,70 +1,68 @@
-
 {% extends "base.html" %}
+{% from "_render_field.html" import render_field %}
 
 {% block content %}
 
-<h1 class="text-center mb-4">Контакти</h1>
+<section class="container mt-4">
 
-<section class="mb-4">
-    <h2>Контактна інформація</h2>
+    <h1 class="mb-4">Контакти</h1>
 
-    <p>
-        <strong>Email:</strong> serhii.aftanas.25@cnu.edu.ua
-    </p>
+    <div class="row">
 
-    <p>
-        <strong>GitHub:</strong>
-        <a href="https://github.com/AftanasSerhiiCNU"
-           target="_blank" rel="noopener noreferrer">
-            Мій GitHub
-        </a>
-    </p>
-</section>
+        <div class="col-md-5 mb-4">
+            <h2>Контактна інформація</h2>
 
-<section class="mb-4">
-    <h2>Написати повідомлення</h2>
+            <p>
+                Для зв'язку зі мною скористайтеся
+                контактною формою або GitHub.
+            </p>
 
-    <form action="#" method="post"
-          onsubmit="event.preventDefault();">
-
-        <div class="mb-3">
-            <label for="name" class="form-label">
-                Ім'я
-            </label>
-            <input type="text"
-                   class="form-control"
-                   id="name"
-                   name="name"
-                   required>
+            <p>
+                <strong>GitHub:</strong>
+                <a href="https://github.com/AftanasSerhiiCNU"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    AftanasSerhiiCNU
+                </a>
+            </p>
         </div>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">
-                Email
-            </label>
-            <input type="email"
-                   class="form-control"
-                   id="email"
-                   name="email"
-                   required>
+        <div class="col-md-7">
+
+            <h2 class="mb-4">Надіслати повідомлення</h2>
+
+            <form method="POST"
+                  action="{{ url_for('contacts') }}"
+                  novalidate>
+
+                {{ form.hidden_tag() }}
+
+                {% if form.csrf_token.errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.csrf_token.errors %}
+                            <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {{ render_field(form.name) }}
+
+                {{ render_field(form.email) }}
+
+                {{ render_field(form.phone) }}
+
+                {{ render_field(form.subject) }}
+
+                {{ render_field(form.message) }}
+
+                {{ form.submit(class="btn btn-primary") }}
+
+            </form>
+
         </div>
 
-        <div class="mb-3">
-            <label for="message" class="form-label">
-                Повідомлення
-            </label>
-            <textarea class="form-control"
-                      id="message"
-                      name="message"
-                      rows="5"
-                      required></textarea>
-        </div>
+    </div>
 
-        <button type="submit" class="btn btn-primary">
-            Надіслати
-        </button>
-
-    </form>
 </section>
 
 {% endblock %}
