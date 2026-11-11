@@ -3,7 +3,10 @@ import unittest
 from decimal import Decimal
 from pathlib import Path
 
-from app import app
+from app import create_app
+
+app = create_app("testing")
+
 from app.products.database import (
     get_products,
     get_product,

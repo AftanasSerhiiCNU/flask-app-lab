@@ -34,10 +34,10 @@
             <form method="POST"
                   action="{{ url_for('contacts') }}"
                   novalidate>
-
+                
                 {{ form.hidden_tag() }}
 
-                {% if form.csrf_token.errors %}
+                {% if form.csrf_token is defined and form.csrf_token.errors %}
                     <div class="alert alert-danger">
                         {% for error in form.csrf_token.errors %}
                             <p class="mb-0">{{ error }}</p>

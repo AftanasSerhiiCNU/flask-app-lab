@@ -6,7 +6,10 @@ from pathlib import Path
 from PIL import Image
 from werkzeug.datastructures import FileStorage
 
-from app import app
+from app import create_app
+
+app = create_app("testing")
+
 from app.products.database import get_products, get_product
 from app.products.images import save_product_image
 

@@ -1,6 +1,8 @@
 import unittest
 from urllib import response
-from app import app
+from app import create_app
+
+app = create_app("testing")
 
 
 class FlaskRoutesTestCase(unittest.TestCase):
