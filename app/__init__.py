@@ -32,11 +32,14 @@ def create_app(config_name=None):
     from .views import register_routes
     from .users import users_bp
     from .products import products_bp
+    from .posts import post_bp
+    from .posts.models import Post
 
     register_routes(app)
 
     app.register_blueprint(users_bp)
     app.register_blueprint(products_bp)
+    app.register_blueprint(post_bp)
 
     @app.errorhandler(404)
     def page_not_found(error):
