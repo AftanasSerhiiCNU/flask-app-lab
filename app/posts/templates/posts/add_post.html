@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% from "_render_field.html" import render_field %} {%
+block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-sm mx-auto" style="max-width: 700px">
+    <div class="card-header">
+      <h2 class="mb-0">{{ title }}</h2>
+    </div>
+
+    <div class="card-body">
+      <form method="POST">
+        {{ form.hidden_tag() }} {% if form.csrf_token is defined and
+        form.csrf_token.errors %}
+        <div class="alert alert-danger">
+          {% for error in form.csrf_token.errors %}
+          <p class="mb-0">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="mb-3">{{ render_field(form.title) }}</div>
+
+        <div class="mb-3">{{ render_field(form.content) }}</div>
+
+        <div class="mb-3 form-check">
+          {{ form.is_active(class="form-check-input") }} {{
+          form.is_active.label(class="form-check-label") }}
+        </div>
+
+        <div class="mb-3">{{ render_field(form.publish_date) }}</div>
+
+        <div class="mb-3">{{ render_field(form.category) }}</div>
+
+        {% if editing %}
+        <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+        {% else %} {{ form.submit(class="btn btn-primary") }} {% endif %}
+      </form>
+    </div>
+
+    <div class="card-footer">
+      <a href="{{ url_for('main') }}" class="btn btn-secondary"> На головну </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

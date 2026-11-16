@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h2>{{ post.title }}</h2>
+    </div>
+
+    <div class="card-body">
+      <p>
+        <strong>Автор:</strong>
+        {{ post.author }}
+      </p>
+
+      <p>
+        <strong>Категорія:</strong>
+        {{ post.category }}
+      </p>
+
+      <p>
+        <strong>Дата публікації:</strong>
+        {{ post.posted.strftime('%d.%m.%Y %H:%M') }}
+      </p>
+
+      <hr />
+
+      <p class="card-text" style="white-space: pre-wrap">{{ post.content }}</p>
+    </div>
+
+    <div class="card-footer">
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <a href="{{ url_for('posts.list_posts') }}" class="btn btn-secondary">
+          Назад до списку
+        </a>
+
+        <a
+          href="{{ url_for('posts.update_post', id=post.id) }}"
+          class="btn btn-primary"
+        >
+          Редагувати
+        </a>
+
+        <a
+          href="{{ url_for('posts.delete_post', id=post.id) }}"
+          class="btn btn-danger"
+        >
+          Видалити
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
