@@ -1,5 +1,10 @@
 {% extends "base.html" %} {% from "_render_field.html" import render_field %} {%
-block content %}
+block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('posts.static', filename='css/posts.css') }}"
+/>
+{% endblock %} {% block content %}
 
 <div class="container mt-4">
   <div class="card shadow-sm mx-auto" style="max-width: 700px">
@@ -38,7 +43,9 @@ block content %}
     </div>
 
     <div class="card-footer">
-      <a href="{{ url_for('main') }}" class="btn btn-secondary"> На головну </a>
+      <a href="{{ url_for('posts.list_posts') }}" class="btn btn-secondary">
+        Назад до списку
+      </a>
     </div>
   </div>
 </div>

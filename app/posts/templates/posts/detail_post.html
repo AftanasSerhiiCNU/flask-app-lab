@@ -1,9 +1,14 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('posts.static', filename='css/posts.css') }}"
+/>
+{% endblock %} {% block content %}
 
 <div class="container mt-4">
   <div class="card shadow-sm">
     <div class="card-header">
-      <h2>{{ post.title }}</h2>
+      <h2 class="mb-0">{{ post.title }}</h2>
     </div>
 
     <div class="card-body">
@@ -28,7 +33,7 @@
     </div>
 
     <div class="card-footer">
-      <div class="d-flex flex-wrap align-items-center gap-2">
+      <div class="post-actions">
         <a href="{{ url_for('posts.list_posts') }}" class="btn btn-secondary">
           Назад до списку
         </a>

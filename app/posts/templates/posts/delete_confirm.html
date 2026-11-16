@@ -1,4 +1,9 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('posts.static', filename='css/posts.css') }}"
+/>
+{% endblock %} {% block content %}
 
 <div class="container mt-4">
   <div class="card shadow-sm mx-auto" style="max-width: 650px">
@@ -21,14 +26,16 @@
       >
         {{ form.hidden_tag() }}
 
-        <button type="submit" class="btn btn-danger">Так, видалити</button>
+        <div class="post-actions">
+          <button type="submit" class="btn btn-danger">Так, видалити</button>
 
-        <a
-          href="{{ url_for('posts.post_detail', id=post.id) }}"
-          class="btn btn-secondary"
-        >
-          Скасувати
-        </a>
+          <a
+            href="{{ url_for('posts.post_detail', id=post.id) }}"
+            class="btn btn-secondary"
+          >
+            Скасувати
+          </a>
+        </div>
       </form>
     </div>
   </div>
