@@ -16,7 +16,7 @@
 
       <h4>{{ post.title }}</h4>
 
-      <p class="text-muted">Автор: {{ post.author }}</p>
+      <p class="text-muted">Автор: {{ post.user.username if post.user else "Автор не вказаний" }}</p>
 
       <div class="alert alert-warning">Цю дію неможливо скасувати.</div>
 

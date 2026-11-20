@@ -36,6 +36,24 @@ block extra_css %}
 
         <div class="mb-3">{{ render_field(form.category) }}</div>
 
+        <div class="mb-3">
+          {{ form.user_id.label(class="form-label") }} {{
+          form.user_id(class="form-select") }} {% for error in form.user_id.errors %}
+          <div class="text-danger">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          {{ form.tags.label(class="form-label") }}
+          {{ form.tags(class="form-select", size=4) }}
+          <div class="form-text">
+            Для вибору декількох тегів утримуйте Ctrl.
+          </div>
+          {% for error in form.tags.errors %}
+          <div class="text-danger">{{ error }}</div>
+          {% endfor %}
+        </div>
+
         {% if editing %}
         <button type="submit" class="btn btn-primary">Зберегти зміни</button>
         {% else %} {{ form.submit(class="btn btn-primary") }} {% endif %}

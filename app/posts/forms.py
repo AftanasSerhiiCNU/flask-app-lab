@@ -7,6 +7,7 @@ from wtforms import (
     BooleanField,
     DateTimeLocalField,
     SelectField,
+    SelectMultipleField,
     SelectChoice,
     SubmitField,
 )
@@ -56,7 +57,20 @@ class PostForm(FlaskForm):
         validators=[DataRequired(message="Оберіть категорію.")],
     )
 
+    user_id = SelectField(
+        "Автор",
+        coerce=int,
+        validators=[DataRequired(message="Оберіть автора.")],
+    )
+
+    tags = SelectMultipleField(
+        "Теги",
+        coerce=int,
+        validators=[Optional()],
+    )
+
     submit = SubmitField("Зберегти пост")
+
 
 class DeletePostForm(FlaskForm):
     submit = SubmitField("Так, видалити")

@@ -1,9 +1,25 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import String, Text, DateTime, Enum, Boolean, text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import (
+    String,
+    Text,
+    DateTime,
+    Enum,
+    Boolean,
+    ForeignKey,
+    Column,
+    Integer,
+    text,
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app import db
+
+post_tags = db.Table(
+    "post_tags",
+    Column("post_id", Integer, ForeignKey("posts.id"), primary_key=True),
+    Column("tag_id", Integer, ForeignKey("tags.id"), primary_key=True),
+)
 
 
 class Post(db.Model):
@@ -28,12 +44,48 @@ class Post(db.Model):
     )
 
     is_active: Mapped[bool] = mapped_column(
-        Boolean, default=True, server_default=text("1"), nullable=False
+        Boolean,
+        default=True,
+        server_default=text("1"),
+        nullable=False,
     )
 
-    author: Mapped[str] = mapped_column(
-        String(20), default="Anonymous", server_default="Anonymous", nullable=False
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=True,
+    )
+
+    user: Mapped["User | None"] = relationship(
+        "User",
+        back_populates="posts",
+    )
+
+    tags: Mapped[list["Tag"]] = relationship(
+        "Tag",
+        secondary=post_tags,
+        back_populates="posts",
     )
 
     def __repr__(self):
         return f"<Post(title={self.title})>"
+
+
+class Tag(db.Model):
+    __tablename__ = "tags"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    name: Mapped[str] = mapped_column(
+        String(50),
+        unique=True,
+        nullable=False,
+    )
+
+    posts: Mapped[list["Post"]] = relationship(
+        "Post",
+        secondary=post_tags,
+        back_populates="tags",
+    )
+
+    def __repr__(self):
+        return f"<Tag(name={self.name})>"

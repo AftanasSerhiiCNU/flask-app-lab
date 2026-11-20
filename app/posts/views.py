@@ -1,19 +1,37 @@
 from datetime import datetime, timezone
 
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import render_template, request, redirect, url_for, flash
+from sqlalchemy import select
 
 from app import db
 from app.posts import post_bp
-from app.posts.models import Post
+from app.posts.models import Post, Tag
 from app.posts.forms import PostForm, DeletePostForm
+from app.users.models import User
+
+
+def set_author_choices(form):
+    users = db.session.scalars(select(User).order_by(User.username)).all()
+
+    form.user_id.choices = [(user.id, user.username) for user in users]
+
+
+def set_tag_choices(form):
+    tags = db.session.scalars(select(Tag).order_by(Tag.name)).all()
+
+    form.tags.choices = [(tag.id, tag.name) for tag in tags]
 
 
 @post_bp.route("/create", methods=["GET", "POST"])
 def create_post():
     form = PostForm()
+    set_author_choices(form)
+    set_tag_choices(form)
 
     if form.validate_on_submit():
-        author = session.get("username") or "Anonymous"
+        selected_tags = db.session.scalars(
+            select(Tag).where(Tag.id.in_(form.tags.data))
+        ).all()
 
         new_post = Post(
             title=form.title.data,
@@ -22,13 +40,14 @@ def create_post():
             posted=form.publish_date.data
             or datetime.now(timezone.utc).replace(tzinfo=None),
             category=form.category.data,
-            author=author[:20],
+            user_id=form.user_id.data,
+            tags=selected_tags,
         )
 
         db.session.add(new_post)
         db.session.commit()
 
-        flash("Post added successfully", "success")
+        flash("Пост успішно створено!", "success")
 
         return redirect(url_for("posts.list_posts"))
 
@@ -36,25 +55,35 @@ def create_post():
         flash("Перевірте правильність заповнення форми.", "danger")
 
     return render_template(
-        "posts/add_post.html", title="Створити новий пост", form=form
+        "posts/add_post.html",
+        title="Створити новий пост",
+        form=form,
     )
 
 
 @post_bp.route("", methods=["GET"])
 @post_bp.route("/", methods=["GET"])
 def list_posts():
-    stmt = db.select(Post).where(Post.is_active.is_(True)).order_by(Post.posted.desc())
+    stmt = select(Post).where(Post.is_active.is_(True)).order_by(Post.posted.desc())
 
     posts = db.session.scalars(stmt).all()
 
-    return render_template("posts/posts.html", title="Список постів", posts=posts)
+    return render_template(
+        "posts/posts.html",
+        title="Список постів",
+        posts=posts,
+    )
 
 
 @post_bp.route("/<int:id>", methods=["GET"])
 def post_detail(id):
     post = db.get_or_404(Post, id)
 
-    return render_template("posts/detail_post.html", title=post.title, post=post)
+    return render_template(
+        "posts/detail_post.html",
+        title=post.title,
+        post=post,
+    )
 
 
 @post_bp.route("/<int:id>/update", methods=["GET", "POST"])
@@ -62,16 +91,25 @@ def update_post(id):
     post = db.get_or_404(Post, id)
 
     form = PostForm(obj=post)
+    set_author_choices(form)
+    set_tag_choices(form)
 
     if request.method == "GET":
         form.publish_date.data = post.posted
+        form.tags.data = [tag.id for tag in post.tags]
 
     if form.validate_on_submit():
+        selected_tags = db.session.scalars(
+            select(Tag).where(Tag.id.in_(form.tags.data))
+        ).all()
+
         post.title = form.title.data
         post.content = form.content.data
         post.is_active = form.is_active.data
         post.category = form.category.data
         post.posted = form.publish_date.data or post.posted
+        post.user_id = form.user_id.data
+        post.tags = selected_tags
 
         db.session.commit()
 
@@ -83,7 +121,10 @@ def update_post(id):
         flash("Перевірте правильність заповнення форми.", "danger")
 
     return render_template(
-        "posts/add_post.html", title="Редагувати пост", form=form, editing=True
+        "posts/add_post.html",
+        title="Редагувати пост",
+        form=form,
+        editing=True,
     )
 
 
@@ -102,5 +143,8 @@ def delete_post(id):
         return redirect(url_for("posts.list_posts"))
 
     return render_template(
-        "posts/delete_confirm.html", title="Видалення поста", post=post, form=form
+        "posts/delete_confirm.html",
+        title="Видалення поста",
+        post=post,
+        form=form,
     )

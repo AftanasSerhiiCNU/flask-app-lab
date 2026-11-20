@@ -1,150 +1,142 @@
-# Лабораторна робота №6
 
-## Тема: Flask-SQLAlchemy, міграції бази даних та CRUD-операції
+# Лабораторна робота №8
 
-**Мета роботи:** навчитися використовувати патерн Application Factory, налаштовувати конфігурації Flask-застосунку, працювати з базою даних через Flask-SQLAlchemy, створювати міграції за допомогою Flask-Migrate та реалізовувати CRUD-операції для публікацій.
+## Тема: Зв'язки між моделями SQLAlchemy
 
-## Використані технології
+## Мета роботи
 
-- Python 3
-- Flask
-- Flask-SQLAlchemy
-- Flask-Migrate
-- SQLAlchemy 2
-- SQLite
-- Flask-WTF
-- WTForms
-- Jinja2
-- Bootstrap 5
-- CSS
-- unittest
+- Закріпити знання про створення та використання зв'язків між моделями в SQLAlchemy.
+- Навчитися працювати з різними типами зв'язків (One-to-Many, Many-to-Many).
+- Ознайомитися з основними операціями над пов'язаними об'єктами.
 
-## Реалізована функціональність
+## Результати виконання
 
-### 1. Application Factory
+### Пункт 7. Отримання постів користувачів
 
-Реалізовано фабрику `create_app()` для створення Flask-застосунку.
+![Пости користувачів](screenshots/lab8_users_posts.png)
 
-Створено окремі конфігурації:
+### Пункт 8. Вибір автора у формі створення поста
 
-- `DevelopmentConfig` — для розробки.
-- `TestingConfig` — для тестування.
-- `ProductionConfig` — для виробничого середовища.
+![Вибір автора](screenshots/lab8_author_select.png)
 
-Налаштовано ініціалізацію SQLAlchemy, Flask-Migrate та реєстрацію Blueprint.
+### Пункт 9. Реалізація зв'язку Many-to-Many
 
-### 2. Модель Post
+![Структура таблиць](screenshots/lab8_many_to_many_schema.png)
 
-Створено модель `Post` із такими полями:
+### Пункт 10. Робота з тегами через Flask Shell
 
-- `id` — унікальний ідентифікатор.
-- `title` — заголовок публікації.
-- `content` — текст публікації.
-- `posted` — дата публікації.
-- `category` — категорія.
-- `is_active` — статус активності.
-- `author` — автор.
+![Теги постів](screenshots/lab8_post_tags.png)
 
-Реалізовано створення, пошук, сортування та видалення записів через Flask Shell.
+![Пости за тегами](screenshots/lab8_tag_posts.png)
 
-### 3. Міграції бази даних
+### Пункт 11. Вибір декількох тегів у формі
 
-Інтегровано Flask-Migrate для керування структурою бази даних.
+![Вибір тегів](screenshots/lab8_multiple_tags.png)
 
-Створено початкову міграцію таблиці `posts` та наступну міграцію з додаванням полів `is_active` і `author`.
+### Пункт 12. Відображення тегів на картках постів
 
-### 4. CRUD-операції
+![Теги на картках](screenshots/lab8_post_card_tags.png)
 
-Створено Blueprint `posts` із такими можливостями:
+### Пункт 13. Оптимізація завантаження авторів і тегів
 
-- Створення публікацій через Flask-WTF.
-- Відображення списку активних публікацій.
-- Перегляд детальної інформації.
-- Редагування публікацій.
-- Видалення з підтвердженням через POST.
-- Flash-повідомлення про виконані операції.
+Для дослідження використано 6 постів, 2 авторів та 4 теги.
 
-### 5. Оформлення інтерфейсу
+SQL-журналювання увімкнено за допомогою:
 
-Використано Bootstrap 5 та власний файл `posts.css`.
+`app.config["SQLALCHEMY_ECHO"] = True`
 
-Реалізовано адаптивні картки публікацій, стандартне зображення `default.jpg`, форми створення й редагування, сторінку деталей та підтвердження видалення.
+Обидва варіанти виконувалися в окремих Flask Shell-сесіях.
 
-### 6. Тестування
+#### 13.1. Запит без оптимізації
 
-Створено 9 автоматизованих тестів для функціональності публікацій.
+**Код:**
 
-Усі 43 тести проєкту успішно пройдено.
+```python
+from app import db
+from app.posts.models import Post
+from sqlalchemy import select
 
-Проведено перевірку записів SQLite через Flask Shell.
+stmt = select(Post).order_by(Post.id.desc())
 
-## Запуск проєкту
+posts = db.session.scalars(stmt).all()
 
-Встановлення залежностей:
-
-```bash
-pip install -r requirements.txt
+for post in posts:
+    print(
+        post.title,
+        post.user.username,
+        [tag.name for tag in post.tags]
+    )
 ```
 
-Налаштування змінних середовища у файлі `.env`:
+**Результат виконання:**
 
-```env
-FLASK_APP=run:app
-APP_CONFIG=development
-SECRET_KEY=your-secret-key
-DATABASE_URL=sqlite:///app.sqlite
+```text
+Art of Pop Culture user1 ['Tech', 'Art', 'Science']
+Lab 8 Test Post user2 ['LifeStyle', 'Tech', 'Art']
+test4 user1 []
+Test 3 user2 ['LifeStyle', 'Art', 'Science']
+Test 2 user2 ['Tech', 'Art']
+Test user1 ['LifeStyle', 'Tech']
 ```
 
-Застосування міграцій:
+**SQL-журнал:**
 
-```bash
-flask --app run:app db upgrade
+![SQL-журнал без оптимізації](screenshots/lab8_lazy_loading.png)
+
+Кількість виконаних SELECT: **9**.
+
+#### 13.2. Запит з оптимізацією
+
+**Код:**
+
+```python
+from app import db
+from app.posts.models import Post
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload, selectinload
+
+stmt = (
+    select(Post)
+    .options(
+        joinedload(Post.user),
+        selectinload(Post.tags)
+    )
+    .order_by(Post.id.desc())
+)
+
+posts = db.session.scalars(stmt).all()
+
+for post in posts:
+    print(
+        post.title,
+        post.user.username,
+        [tag.name for tag in post.tags]
+    )
 ```
 
-Запуск застосунку:
+**Результат виконання:**
 
-```bash
-python run.py
+```text
+Art of Pop Culture user1 ['Tech', 'Art', 'Science']
+Lab 8 Test Post user2 ['LifeStyle', 'Tech', 'Art']
+test4 user1 []
+Test 3 user2 ['LifeStyle', 'Art', 'Science']
+Test 2 user2 ['Tech', 'Art']
+Test user1 ['LifeStyle', 'Tech']
 ```
 
-Список публікацій:
+**SQL-журнал:**
 
-`http://127.0.0.1:5000/post/`
+![SQL-журнал з оптимізацією](screenshots/lab8_eager_loading.png)
 
-## Запуск тестів
+Кількість виконаних SELECT: **2**.
 
-```bash
-python -m unittest discover -s tests -v
-```
+#### 13.3. Порівняльна таблиця
 
-**Результат:** 43 тести виконано успішно.
+| Варіант запиту | Кількість дописів | Кількість SELECT |
+|---|---:|---:|
+| Без `.options()` | 6 | 9 |
+| Із `joinedload()` та `selectinload()` | 6 | 2 |
 
-## Результати роботи
+Після оптимізації кількість SQL-запитів зменшилася з 9 до 2, тобто на **77,8%**.
 
-### Список публікацій
-
-![Список публікацій](screenshots/lab6_posts_list.png)
-
-### Створення публікації
-
-![Створення публікації](screenshots/lab6_post_create.png)
-
-### Детальна інформація
-
-![Детальна інформація](screenshots/lab6_post_detail.png)
-
-### Редагування публікації
-
-![Редагування публікації](screenshots/lab6_post_update.png)
-
-### Видалення публікації
-
-![Підтвердження видалення](screenshots/lab6_post_delete.png)
-
-### Перевірка SQLite
-
-![Перевірка бази даних](screenshots/lab6_database.png)
-
-### Автоматизоване тестування
-
-![Результати тестування](screenshots/lab6_tests.png)

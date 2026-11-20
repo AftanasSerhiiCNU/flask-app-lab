@@ -4,7 +4,6 @@
   href="{{ url_for('posts.static', filename='css/posts.css') }}"
 />
 {% endblock %} {% block content %}
-
 <div class="container mt-4">
   <div class="card shadow-sm">
     <div class="card-header">
@@ -14,7 +13,7 @@
     <div class="card-body">
       <p>
         <strong>Автор:</strong>
-        {{ post.author }}
+        {{ post.user.username if post.user else "Автор не вказаний" }}
       </p>
 
       <p>
@@ -30,6 +29,18 @@
       <hr />
 
       <p class="card-text" style="white-space: pre-wrap">{{ post.content }}</p>
+
+      <hr />
+
+      <div class="d-flex align-items-center flex-wrap gap-2">
+        <strong>Теги:</strong>
+
+        {% if post.tags %} {% for tag in post.tags %}
+        <span class="badge rounded-pill bg-primary"> {{ tag.name }} </span>
+        {% endfor %} {% else %}
+        <span class="text-muted">Теги відсутні</span>
+        {% endif %}
+      </div>
     </div>
 
     <div class="card-footer">
@@ -55,5 +66,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}

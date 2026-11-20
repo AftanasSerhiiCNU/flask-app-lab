@@ -26,6 +26,8 @@ def create_app(config_name=None):
         else:
             raise RuntimeError("Необхідно встановити SECRET_KEY у файлі .env")
 
+    app.config["SQLALCHEMY_ECHO"] = True
+
     db.init_app(app)
     migrate.init_app(app, db)
 
@@ -33,7 +35,8 @@ def create_app(config_name=None):
     from .users import users_bp
     from .products import products_bp
     from .posts import post_bp
-    from .posts.models import Post
+    from app.users.models import User
+    from app.posts.models import Post
 
     register_routes(app)
 
